@@ -1,98 +1,190 @@
+# API Seguro
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descripción
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Este proyecto es una API desarrollada con el framework [NestJS](https://nestjs.com/) para gestionar datos relacionados con seguros. La estructura del proyecto está organizada en módulos para facilitar la escalabilidad y el mantenimiento.
 
-## Description
+## Requisitos previos
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Antes de comenzar, asegúrate de tener instalados los siguientes programas:
 
-## Project setup
+- [Node.js](https://nodejs.org/) (versión 16 o superior)
+- [npm](https://www.npmjs.com/) (incluido con Node.js)
+- [MySQL](https://www.mysql.com/) (para la base de datos)
+
+## Instalación
+
+Clona el repositorio y navega al directorio del proyecto:
+
+```bash
+$ git clone https://github.com/nfuegopy/api-seguro.git
+$ cd api-seguro
+```
+
+Instala las dependencias del proyecto:
 
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+Configura las variables de entorno en un archivo `.env` en la raíz del proyecto. Ejemplo:
+
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=tu_contraseña
+DB_DATABASE=api_seguro
+```
+
+## Configuración del archivo .env
+
+El archivo `.env` es crucial para configurar las variables de entorno necesarias para que la aplicación funcione correctamente. A continuación, se muestra un ejemplo de cómo debería estructurarse:
+
+```properties
+# .env
+
+DB_HOST=tu_host_de_base_de_datos
+DB_PORT=puerto_de_tu_base_de_datos
+DB_USERNAME=tu_usuario_de_base_de_datos
+DB_PASSWORD=tu_contraseña_de_base_de_datos
+DB_DATABASE=nombre_de_tu_base_de_datos
+```
+
+### Notas importantes:
+
+- **DB_HOST:** Dirección del servidor de la base de datos.
+- **DB_PORT:** Puerto en el que se encuentra la base de datos (por defecto, MySQL utiliza el puerto `3306`).
+- **DB_USERNAME:** Usuario con permisos para acceder a la base de datos.
+- **DB_PASSWORD:** Contraseña del usuario.
+- **DB_DATABASE:** Nombre de la base de datos que utilizará la aplicación.
+
+Asegúrate de no compartir este archivo ni su contenido en repositorios públicos para evitar problemas de seguridad.
+
+## Scripts disponibles
+
+### Levantar el servidor
+
+- **Modo desarrollo:**
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
 $ npm run start:dev
+```
 
-# production mode
+- **Modo producción:**
+
+```bash
 $ npm run start:prod
 ```
 
-## Run tests
+- **Modo estándar:**
 
 ```bash
-# unit tests
+$ npm run start
+```
+
+### Pruebas
+
+- **Pruebas unitarias:**
+
+```bash
 $ npm run test
+```
 
-# e2e tests
+- **Pruebas end-to-end:**
+
+```bash
 $ npm run test:e2e
+```
 
-# test coverage
+- **Cobertura de pruebas:**
+
+```bash
 $ npm run test:cov
 ```
 
-## Deployment
+## Estructura del proyecto
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+La estructura del proyecto está organizada de la siguiente manera:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```
+src/
+├── app.controller.ts
+├── app.module.ts
+├── app.service.ts
+├── main.ts
+├── referenciales/
+│   ├── geograficos/
+│   │   ├── ciudad/
+│   │   ├── departamento/
+│   │   └── pais/
+│   └── parametros/
+│       ├── roles/
+│       └── tipo-seguro/
+└── test/
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Cada módulo contiene controladores, servicios, entidades y DTOs para manejar la lógica de negocio y las operaciones relacionadas.
 
-## Resources
+## Flujo de trabajo
 
-Check out a few resources that may come in handy when working with NestJS:
+1. **Controladores:** Manejan las solicitudes HTTP y delegan la lógica al servicio correspondiente.
+2. **Servicios:** Contienen la lógica de negocio y se comunican con el repositorio de datos.
+3. **Entidades:** Representan las tablas de la base de datos.
+4. **DTOs:** Definen la estructura de los datos que se envían y reciben.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Crear nuevos endpoints
 
-## Support
+Para agregar un nuevo módulo y sus endpoints, sigue estos pasos:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. **Generar un módulo:**
 
-## Stay in touch
+```bash
+$ nest g module <nombre-modulo>
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+2. **Generar un controlador:**
 
-## License
+```bash
+$ nest g controller <nombre-modulo>
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+3. **Generar un servicio:**
+
+```bash
+$ nest g service <nombre-modulo>
+```
+
+4. **Crear las entidades y DTOs:**
+   - Define la entidad en `src/<nombre-modulo>/entities/`.
+   - Define los DTOs en `src/<nombre-modulo>/dto/`.
+
+5. **Configurar el módulo:**
+   - Importa el módulo en `app.module.ts`.
+   - Configura el repositorio en el servicio usando `@InjectRepository`.
+
+6. **Agregar las rutas en el controlador:**
+   - Define los métodos HTTP (`GET`, `POST`, `PATCH`, `DELETE`) y llama al servicio correspondiente.
+
+7. **Probar los endpoints:**
+   - Usa herramientas como [Postman](https://www.postman.com/) o [Insomnia](https://insomnia.rest/) para probar las rutas.
+
+## Recursos adicionales
+
+- [Documentación oficial de NestJS](https://docs.nestjs.com/)
+- [Canal de Discord de NestJS](https://discord.gg/G7Qnnhy)
+- [Cursos oficiales de NestJS](https://courses.nestjs.com/)
+
+## Licencia
+
+Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
+
+---
+
+## Creado por
+
+Esta guía fue creada por **Antonio Barrios** como una referencia detallada para entender y trabajar con este proyecto. Si tienes alguna duda o sugerencia, no dudes en contribuir o ponerte en contacto.

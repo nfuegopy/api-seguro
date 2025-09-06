@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { CiudadService } from './ciudad.service';
 import { CreateCiudadDto } from './dto/create-ciudad.dto';
 import { UpdateCiudadDto } from './dto/update-ciudad.dto';
@@ -12,9 +23,14 @@ export class CiudadController {
     return this.ciudadService.create(createCiudadDto);
   }
 
+  @Post('masivo')
+  createMasivo(@Body() createCiudadDtos: CreateCiudadDto[]) {
+    return this.ciudadService.createMasivo(createCiudadDtos);
+  }
+
   @Get()
-  findAll() {
-    return this.ciudadService.findAll();
+  findAll(@Query('nombre') nombre?: string) {
+    return this.ciudadService.findAll(nombre);
   }
 
   @Get(':id')
