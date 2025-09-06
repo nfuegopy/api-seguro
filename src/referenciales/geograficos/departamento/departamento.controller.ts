@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { DepartamentoService } from './departamento.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
@@ -12,9 +23,14 @@ export class DepartamentoController {
     return this.departamentoService.create(createDepartamentoDto);
   }
 
+  @Post('masivo')
+  createMasivo(@Body() createDeptoDtos: CreateDepartamentoDto[]) {
+    return this.departamentoService.createMasivo(createDeptoDtos);
+  }
+
   @Get()
-  findAll() {
-    return this.departamentoService.findAll();
+  findAll(@Query('nombre') nombre?: string) {
+    return this.departamentoService.findAll(nombre);
   }
 
   @Get(':id')
@@ -23,7 +39,10 @@ export class DepartamentoController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDepartamentoDto: UpdateDepartamentoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDepartamentoDto: UpdateDepartamentoDto,
+  ) {
     return this.departamentoService.update(+id, updateDepartamentoDto);
   }
 
