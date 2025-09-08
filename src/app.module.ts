@@ -11,6 +11,7 @@ import { TipoSeguroModule } from './referenciales/parametros/tipo-seguro/tipo-se
 import { PaisModule } from './referenciales/geograficos/pais/pais.module';
 import { DepartamentoModule } from './referenciales/geograficos/departamento/departamento.module';
 import { CiudadModule } from './referenciales/geograficos/ciudad/ciudad.module';
+import { AseguradoraModule } from './principales/aseguradora/aseguradora.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { CiudadModule } from './referenciales/geograficos/ciudad/ciudad.module';
     PaisModule,
     DepartamentoModule,
     CiudadModule,
+    AseguradoraModule,
   ],
   controllers: [AppController],
   providers: [AppService],
