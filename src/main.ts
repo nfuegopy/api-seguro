@@ -10,6 +10,6 @@ async function bootstrap() {
   // Añade esta línea para habilitar las validaciones globales
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(9031);
 }
 bootstrap();
