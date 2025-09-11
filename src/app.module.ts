@@ -15,6 +15,7 @@ import { AseguradoraModule } from './principales/aseguradora/aseguradora.module'
 import { TiposDocumentoModule } from './referenciales/parametros/tipos-documento/tipos-documento.module';
 import { PersonasModule } from './gestion/personas/personas.module';
 import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
+import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-do
     TiposDocumentoModule,
     PersonasModule,
     PersonaDocumentosModule,
+    UsuariosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

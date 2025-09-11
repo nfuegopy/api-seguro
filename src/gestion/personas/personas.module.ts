@@ -11,5 +11,6 @@ import { PersonaDocumento } from '../persona-documentos/entities/persona-documen
   imports: [TypeOrmModule.forFeature([Persona, PersonaDocumento])],
   controllers: [PersonasController],
   providers: [PersonasService],
+  exports: [PersonasService],
 })
 export class PersonasModule {}
