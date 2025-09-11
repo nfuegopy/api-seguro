@@ -13,6 +13,8 @@ import { DepartamentoModule } from './referenciales/geograficos/departamento/dep
 import { CiudadModule } from './referenciales/geograficos/ciudad/ciudad.module';
 import { AseguradoraModule } from './principales/aseguradora/aseguradora.module';
 import { TiposDocumentoModule } from './referenciales/parametros/tipos-documento/tipos-documento.module';
+import { PersonasModule } from './gestion/personas/personas.module';
+import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { TiposDocumentoModule } from './referenciales/parametros/tipos-documento
     CiudadModule,
     AseguradoraModule,
     TiposDocumentoModule,
+    PersonasModule,
+    PersonaDocumentosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
