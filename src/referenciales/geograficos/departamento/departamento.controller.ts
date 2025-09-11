@@ -9,12 +9,15 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { DepartamentoService } from './departamento.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 
 @Controller('departamento')
+@UseGuards(ApiKeyGuard)
 export class DepartamentoController {
   constructor(private readonly departamentoService: DepartamentoService) {}
 

@@ -12,6 +12,11 @@ import { PaisModule } from './referenciales/geograficos/pais/pais.module';
 import { DepartamentoModule } from './referenciales/geograficos/departamento/departamento.module';
 import { CiudadModule } from './referenciales/geograficos/ciudad/ciudad.module';
 import { AseguradoraModule } from './principales/aseguradora/aseguradora.module';
+import { TiposDocumentoModule } from './referenciales/parametros/tipos-documento/tipos-documento.module';
+import { PersonasModule } from './gestion/personas/personas.module';
+import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
+import { UsuariosModule } from './gestion/usuarios/usuarios.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -45,6 +50,11 @@ import { AseguradoraModule } from './principales/aseguradora/aseguradora.module'
     DepartamentoModule,
     CiudadModule,
     AseguradoraModule,
+    TiposDocumentoModule,
+    PersonasModule,
+    PersonaDocumentosModule,
+    UsuariosModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,12 +9,15 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CiudadService } from './ciudad.service';
 import { CreateCiudadDto } from './dto/create-ciudad.dto';
 import { UpdateCiudadDto } from './dto/update-ciudad.dto';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 
 @Controller('ciudad')
+@UseGuards(ApiKeyGuard)
 export class CiudadController {
   constructor(private readonly ciudadService: CiudadService) {}
 
