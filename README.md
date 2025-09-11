@@ -39,6 +39,7 @@ DB_PORT=3306
 DB_USERNAME=root
 DB_PASSWORD=tu_contraseña
 DB_DATABASE=api_seguro
+API_KEY=tu_api_key_secreta
 ```
 
 ## Configuración del archivo .env
@@ -53,6 +54,7 @@ DB_PORT=puerto_de_tu_base_de_datos
 DB_USERNAME=tu_usuario_de_base_de_datos
 DB_PASSWORD=tu_contraseña_de_base_de_datos
 DB_DATABASE=nombre_de_tu_base_de_datos
+API_KEY=tu_api_key_secreta
 ```
 
 ### Notas importantes:
@@ -62,6 +64,7 @@ DB_DATABASE=nombre_de_tu_base_de_datos
 - **DB_USERNAME:** Usuario con permisos para acceder a la base de datos.
 - **DB_PASSWORD:** Contraseña del usuario.
 - **DB_DATABASE:** Nombre de la base de datos que utilizará la aplicación.
+- **API_KEY:** Clave secreta utilizada para proteger los endpoints.
 
 Asegúrate de no compartir este archivo ni su contenido en repositorios públicos para evitar problemas de seguridad.
 
@@ -117,6 +120,9 @@ src/
 ├── app.module.ts
 ├── app.service.ts
 ├── main.ts
+├── common/
+│   └── guards/
+│       └── api-key.guard.ts
 ├── referenciales/
 │   ├── geograficos/
 │   │   ├── ciudad/
@@ -130,12 +136,45 @@ src/
 
 Cada módulo contiene controladores, servicios, entidades y DTOs para manejar la lógica de negocio y las operaciones relacionadas.
 
-## Flujo de trabajo
+## Uso del ApiKeyGuard
 
-1. **Controladores:** Manejan las solicitudes HTTP y delegan la lógica al servicio correspondiente.
-2. **Servicios:** Contienen la lógica de negocio y se comunican con el repositorio de datos.
-3. **Entidades:** Representan las tablas de la base de datos.
-4. **DTOs:** Definen la estructura de los datos que se envían y reciben.
+El `ApiKeyGuard` es un guard que protege los endpoints mediante una clave secreta (API Key). Para utilizarlo, sigue estos pasos:
+
+1. **Configura la API Key en el archivo `.env`:**
+
+```properties
+API_KEY=tu_api_key_secreta
+```
+
+2. **Aplica el guard a un controlador o endpoint específico:**
+
+```typescript
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiKeyGuard } from './common/guards/api-key.guard';
+
+@Controller('protegido')
+@UseGuards(ApiKeyGuard)
+export class ProtegidoController {
+  @Get()
+  obtenerDatosProtegidos() {
+    return { mensaje: 'Acceso autorizado a datos protegidos' };
+  }
+}
+```
+
+3. **Prueba el endpoint protegido:**
+   - Usa una herramienta como [Postman](https://www.postman.com/) o [Insomnia](https://insomnia.rest/).
+   - Incluye el encabezado `X-API-KEY` con el valor de tu API Key.
+
+Ejemplo de solicitud:
+
+```
+GET /protegido HTTP/1.1
+Host: localhost:3000
+X-API-KEY: tu_api_key_secreta
+```
+
+Si la API Key es válida, recibirás una respuesta exitosa. De lo contrario, obtendrás un error `401 Unauthorized`.
 
 ## Crear nuevos endpoints
 

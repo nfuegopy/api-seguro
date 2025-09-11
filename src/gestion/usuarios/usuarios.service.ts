@@ -98,4 +98,12 @@ export class UsuariosService {
     await this.usuarioRepository.remove(usuario);
     return { message: `Usuario con ID ${id} eliminado.` };
   }
+
+  //Service para utilizar con el Auth
+  async findByEmail(email: string): Promise<Usuario | undefined> {
+    const user = await this.usuarioRepository.findOne({
+      where: { email },
+    });
+    return user ?? undefined; // Si user es null, devuelve undefined
+  }
 }

@@ -15,5 +15,6 @@ import { PersonaDocumento } from '../persona-documentos/entities/persona-documen
   ],
   controllers: [UsuariosController],
   providers: [UsuariosService],
+  exports: [UsuariosService],
 })
 export class UsuariosModule {}

@@ -16,6 +16,7 @@ import { TiposDocumentoModule } from './referenciales/parametros/tipos-documento
 import { PersonasModule } from './gestion/personas/personas.module';
 import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
 import { UsuariosModule } from './gestion/usuarios/usuarios.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { UsuariosModule } from './gestion/usuarios/usuarios.module';
     PersonasModule,
     PersonaDocumentosModule,
     UsuariosModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
