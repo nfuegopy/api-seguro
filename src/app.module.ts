@@ -17,6 +17,8 @@ import { PersonasModule } from './gestion/personas/personas.module';
 import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
 import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
+import { VehiculoMarcasModule } from './referenciales/parametros/vehiculo_marcas/vehiculo_marcas.module';
+import { VehiculoModelosModule } from './referenciales/parametros/vehiculo_modelos/vehiculo_modelos.module';
 
 @Module({
   imports: [
@@ -55,6 +57,8 @@ import { AuthModule } from './auth/auth.module';
     PersonaDocumentosModule,
     UsuariosModule,
     AuthModule,
+    VehiculoMarcasModule,
+    VehiculoModelosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
