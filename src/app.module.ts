@@ -17,6 +17,8 @@ import { PersonasModule } from './gestion/personas/personas.module';
 import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
 import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
+import { GrupoMenuModule } from './referenciales/parametros/grupo-menu/grupo-menu.module';
+import { MenuModule } from './referenciales/parametros/menu/menu.module';
 
 @Module({
   imports: [
@@ -55,6 +57,8 @@ import { AuthModule } from './auth/auth.module';
     PersonaDocumentosModule,
     UsuariosModule,
     AuthModule,
+    GrupoMenuModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [AppService],
