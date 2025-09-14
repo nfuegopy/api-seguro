@@ -17,6 +17,9 @@ import { PersonasModule } from './gestion/personas/personas.module';
 import { PersonaDocumentosModule } from './gestion/persona-documentos/persona-documentos.module';
 import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
+import { GrupoMenuModule } from './referenciales/parametros/grupo-menu/grupo-menu.module';
+import { MenuModule } from './referenciales/parametros/menu/menu.module';
+import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.module';
 import { VehiculoMarcasModule } from './referenciales/parametros/vehiculo_marcas/vehiculo_marcas.module';
 import { VehiculoModelosModule } from './referenciales/parametros/vehiculo_modelos/vehiculo_modelos.module';
 
@@ -57,6 +60,9 @@ import { VehiculoModelosModule } from './referenciales/parametros/vehiculo_model
     PersonaDocumentosModule,
     UsuariosModule,
     AuthModule,
+    GrupoMenuModule,
+    MenuModule,
+    MenuRolModule,
     VehiculoMarcasModule,
     VehiculoModelosModule,
   ],
