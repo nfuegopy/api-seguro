@@ -19,6 +19,7 @@ import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
 import { GrupoMenuModule } from './referenciales/parametros/grupo-menu/grupo-menu.module';
 import { MenuModule } from './referenciales/parametros/menu/menu.module';
+import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { MenuModule } from './referenciales/parametros/menu/menu.module';
     AuthModule,
     GrupoMenuModule,
     MenuModule,
+    MenuRolModule,
   ],
   controllers: [AppController],
   providers: [AppService],
