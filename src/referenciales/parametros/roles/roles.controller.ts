@@ -41,4 +41,9 @@ export class RolesController {
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);
   }
+
+  @Get(':id/menus')
+  findMenuByRol(@Param('id') id: string) {
+    return this.rolesService.findMenuByRol(+id);
+  }
 }
