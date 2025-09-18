@@ -19,6 +19,7 @@ import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
 import { VehiculoMarcasModule } from './referenciales/parametros/vehiculo_marcas/vehiculo_marcas.module';
 import { VehiculoModelosModule } from './referenciales/parametros/vehiculo_modelos/vehiculo_modelos.module';
+import { ProductosSeguroModule } from './referenciales/parametros/productos_seguro/productos_seguro.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { VehiculoModelosModule } from './referenciales/parametros/vehiculo_model
     AuthModule,
     VehiculoMarcasModule,
     VehiculoModelosModule,
+    ProductosSeguroModule,
   ],
   controllers: [AppController],
   providers: [AppService],
