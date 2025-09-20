@@ -100,10 +100,18 @@ export class UsuariosService {
   }
 
   //Service para utilizar con el Auth
+  // async findByEmail(email: string): Promise<Usuario | undefined> {
+  //   const user = await this.usuarioRepository.findOne({
+  //     where: { email },
+  //   });
+  //   return user ?? undefined; // Si user es null, devuelve undefined
+  // }
+
   async findByEmail(email: string): Promise<Usuario | undefined> {
     const user = await this.usuarioRepository.findOne({
       where: { email },
+      relations: ['persona', 'rol'], // <-- ESTA LÍNEA FALTA EN TU SERVIDOR
     });
-    return user ?? undefined; // Si user es null, devuelve undefined
+    return user ?? undefined;
   }
 }
