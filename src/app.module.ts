@@ -26,6 +26,9 @@ import { ProductosSeguroModule } from './referenciales/parametros/productos_segu
 import { GrupoMenuModule } from './referenciales/parametros/grupo-menu/grupo-menu.module'; // De la rama main
 import { MenuModule } from './referenciales/parametros/menu/menu.module'; // De la rama main
 import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.module'; // De la rama main
+import { NivelesCoberturasModule } from './principales/niveles-coberturas/niveles-coberturas.module';
+import { BasesCondicionesModule } from './referenciales/parametros/bases-condiciones/bases-condiciones.module';
+import { PolizasModule } from './principales/polizas/polizas.module';
 
 @Module({
   imports: [
@@ -65,7 +68,10 @@ import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.modu
     MenuRolModule,           // De la rama main
     VehiculoMarcasModule,
     VehiculoModelosModule,
-    ProductosSeguroModule,   // De la rama b1
+    ProductosSeguroModule,
+    NivelesCoberturasModule,
+    BasesCondicionesModule,
+    PolizasModule,   // De la rama b1
   ],
   controllers: [AppController],
   providers: [AppService],
