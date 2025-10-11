@@ -2,17 +2,25 @@
 
 import {
   Controller,
+  Get,
   Post,
   Body,
+  Patch,
+  Param,
+  Delete,
   UseInterceptors,
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  ParseIntPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SeccionesWebService } from './secciones-web.service';
 import { CreateSeccionWebDto } from './dto/create-seccion-web.dto';
+import { UpdateSeccionWebDto } from './dto/update-seccion-web.dto';
 
 @Controller('secciones-web')
 export class SeccionesWebController {
@@ -35,5 +43,48 @@ export class SeccionesWebController {
     return this.seccionesWebService.create(createSeccionWebDto, file);
   }
 
-  // ... aquí irían los otros métodos del CRUD (findAll, findOne, update, remove)
+  @Get()
+  findAll() {
+    return this.seccionesWebService.findAll();
+  }
+
+  // --- NUEVO ENDPOINT: Listar solo activos ---
+  @Get('activos')
+  findAllActive() {
+    return this.seccionesWebService.findAllActive();
+  }
+
+  // --- NUEVO ENDPOINT: Buscar uno por ID ---
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.seccionesWebService.findOne(id);
+  }
+
+  // --- NUEVO ENDPOINT: Actualizar ---
+  @Patch(':id')
+  @UseInterceptors(FileInterceptor('imagen')) // Permite recibir un archivo
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSeccionWebDto: UpdateSeccionWebDto,
+    @UploadedFile(
+      // La validación es opcional en la actualización
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg|webp)' }),
+        ],
+        fileIsRequired: false, // <-- IMPORTANTE: el archivo no es obligatorio
+      }),
+    )
+    file?: Express.Multer.File,
+  ) {
+    return this.seccionesWebService.update(id, updateSeccionWebDto, file);
+  }
+
+  // --- NUEVO ENDPOINT: Eliminar ---
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK) // Devuelve un 200 OK en lugar de 204 No Content
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.seccionesWebService.remove(id);
+  }
 }
