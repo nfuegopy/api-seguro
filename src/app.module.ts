@@ -29,6 +29,9 @@ import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.modu
 import { NivelesCoberturasModule } from './principales/niveles-coberturas/niveles-coberturas.module';
 import { BasesCondicionesModule } from './referenciales/parametros/bases-condiciones/bases-condiciones.module';
 import { PolizasModule } from './principales/polizas/polizas.module';
+import { SeccionesWebModule } from './referenciales/web/secciones-web/secciones-web.module'; // <-- 1. Importar el nuevo módulo
+
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -63,15 +66,17 @@ import { PolizasModule } from './principales/polizas/polizas.module';
     PersonaDocumentosModule,
     UsuariosModule,
     AuthModule,
-    GrupoMenuModule,         // De la rama main
-    MenuModule,              // De la rama main
-    MenuRolModule,           // De la rama main
+    GrupoMenuModule, // De la rama main
+    MenuModule, // De la rama main
+    MenuRolModule, // De la rama main
     VehiculoMarcasModule,
     VehiculoModelosModule,
     ProductosSeguroModule,
     NivelesCoberturasModule,
     BasesCondicionesModule,
-    PolizasModule,   // De la rama b1
+    PolizasModule, // De la rama b1
+    FirebaseModule,
+    SeccionesWebModule,
   ],
   controllers: [AppController],
   providers: [AppService],
