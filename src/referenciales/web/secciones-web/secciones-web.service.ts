@@ -142,6 +142,7 @@ export class SeccionesWebService {
         reject(error);
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       stream.on('finish', async () => {
         // Hacer el archivo público para poder acceder a la URL
         await fileUpload.makePublic();
@@ -164,6 +165,7 @@ export class SeccionesWebService {
       // Si el archivo no existe en Firebase, no lances un error, solo regístralo.
       console.warn(
         `No se pudo eliminar el archivo de Firebase o ya no existía: ${imageUrl}`,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         error.message,
       );
     }
