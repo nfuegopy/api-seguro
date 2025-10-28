@@ -1,6 +1,14 @@
 /* eslint-disable prettier/prettier */
 
-import { IsNotEmpty, IsString, MaxLength, IsInt, IsPositive, IsOptional, IsBoolean } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  IsInt,
+  IsPositive,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
 
 export class CreateProductoSeguroDto {
   @IsString()
@@ -16,6 +24,10 @@ export class CreateProductoSeguroDto {
   @IsBoolean()
   @IsOptional()
   activo?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  publicar_en_web?: boolean;
 
   @IsInt()
   @IsPositive()
