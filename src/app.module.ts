@@ -34,6 +34,7 @@ import { SeccionesWebModule } from './referenciales/web/secciones-web/secciones-
 import { FirebaseModule } from './firebase/firebase.module';
 import { SeccionProductoPublicadoModule } from './referenciales/web/seccion-producto-publicado/seccion-producto-publicado.module';
 import { CamposFormularioModule } from './referenciales/formularios/campos-formulario/campos-formulario.module';
+import { ProductoFormularioCamposModule } from './referenciales/formularios/producto-formulario-campos/producto-formulario-campos.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { CamposFormularioModule } from './referenciales/formularios/campos-formu
     SeccionesWebModule,
     SeccionProductoPublicadoModule,
     CamposFormularioModule,
+    ProductoFormularioCamposModule,
   ],
   controllers: [AppController],
   providers: [AppService],
