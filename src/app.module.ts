@@ -32,6 +32,8 @@ import { PolizasModule } from './principales/polizas/polizas.module';
 import { SeccionesWebModule } from './referenciales/web/secciones-web/secciones-web.module'; // <-- 1. Importar el nuevo módulo
 
 import { FirebaseModule } from './firebase/firebase.module';
+import { SeccionProductoPublicadoModule } from './referenciales/web/seccion-producto-publicado/seccion-producto-publicado.module';
+import { CamposFormularioModule } from './referenciales/formularios/campos-formulario/campos-formulario.module';
 
 @Module({
   imports: [
@@ -77,6 +79,8 @@ import { FirebaseModule } from './firebase/firebase.module';
     PolizasModule, // De la rama b1
     FirebaseModule,
     SeccionesWebModule,
+    SeccionProductoPublicadoModule,
+    CamposFormularioModule,
   ],
   controllers: [AppController],
   providers: [AppService],
