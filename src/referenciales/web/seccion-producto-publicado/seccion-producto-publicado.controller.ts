@@ -23,6 +23,13 @@ export class SeccionProductoPublicadoController {
     return this.service.create(dto);
   }
 
+  // --- NUEVO ENDPOINT PÚBLICO ---
+  @Get('publicos')
+  findAllPublic() {
+    return this.service.findAll();
+  }
+  // --- FIN DE NUEVO ENDPOINT ---
+
   @Get()
   findAll() {
     return this.service.findAll();
