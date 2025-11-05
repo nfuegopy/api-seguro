@@ -23,6 +23,11 @@ export class ProductoFormularioCamposController {
     return this.service.create(dto);
   }
 
+  @Get('publicos')
+  findAllPublic() {
+    return this.service.findAll();
+  }
+
   @Get()
   findAll() {
     return this.service.findAll();
