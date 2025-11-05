@@ -7,7 +7,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
+  //  IsUrl,
 } from 'class-validator';
 
 export class CreateSeccionWebDto {
@@ -29,9 +29,9 @@ export class CreateSeccionWebDto {
   @IsOptional()
   activo?: boolean;
 
-  @IsUrl()
-  @IsOptional()
-  enlace_url?: string;
+  // @IsUrl()
+  // @IsOptional()
+  // enlace_url?: string;
 
   @IsString()
   @IsOptional()
