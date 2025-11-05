@@ -26,6 +26,15 @@ export class ProductoSeguro {
   @Column({ type: 'tinyint', width: 1, default: 1, nullable: false })
   activo: boolean;
 
+  @Column({
+    type: 'boolean',
+    name: 'publicar_en_web',
+    default: false,
+    comment:
+      'Permite que este producto sea seleccionado para la página pública.',
+  })
+  publicar_en_web: boolean;
+
   // --- Relación con Aseguradora ---
   @ManyToOne(() => Aseguradora, { nullable: false, eager: true })
   @JoinColumn({ name: 'aseguradora_id' })

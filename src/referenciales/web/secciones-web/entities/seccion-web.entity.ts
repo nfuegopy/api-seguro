@@ -22,8 +22,8 @@ export class SeccionWeb {
   @Column({ type: 'boolean', default: true })
   activo: boolean;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  enlace_url: string;
+  // @Column({ type: 'varchar', length: 255, nullable: true })
+  // enlace_url: string;
 
   @Column({
     type: 'varchar',
