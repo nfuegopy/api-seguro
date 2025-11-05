@@ -1,5 +1,18 @@
 /* eslint-disable prettier/prettier */
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  OneToOne, // <-- AÑADIR
+  OneToMany, // <-- AÑADIR
+} from 'typeorm';
+
+// --- AÑADIR IMPORTS DE NUEVAS ENTIDADES ---
+import { DetallesPolizaAuto } from './detalles-poliza-auto.entity';
+import { DetallesPolizaMedica } from './detalles-poliza-medica.entity';
+import { PolizaAsegurado } from './poliza-asegurado.entity';
 
 export enum EstadoPoliza {
   BORRADOR = 'Borrador',
@@ -50,5 +63,14 @@ export class Poliza {
   @UpdateDateColumn({ name: 'fecha_actualizacion' })
   fecha_actualizacion: Date;
 
-  // Aquí puedes agregar las relaciones ManyToOne con las otras entidades si las tienes creadas
+  // --- AÑADIR NUEVAS RELACIONES ---
+
+  @OneToOne(() => DetallesPolizaAuto, (detalle) => detalle.poliza)
+  detalles_auto: DetallesPolizaAuto;
+
+  @OneToOne(() => DetallesPolizaMedica, (detalle) => detalle.poliza)
+  detalles_medico: DetallesPolizaMedica;
+
+  @OneToMany(() => PolizaAsegurado, (asegurado) => asegurado.poliza)
+  asegurados: PolizaAsegurado[];
 }
