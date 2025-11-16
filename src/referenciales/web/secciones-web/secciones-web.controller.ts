@@ -61,19 +61,38 @@ export class SeccionesWebController {
   }
 
   // --- NUEVO ENDPOINT: Actualizar ---
-  @Patch(':id')
-  @UseInterceptors(FileInterceptor('imagen')) // Permite recibir un archivo
+  // @Patch(':id')
+  // @UseInterceptors(FileInterceptor('imagen')) // Permite recibir un archivo
+  // update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() updateSeccionWebDto: UpdateSeccionWebDto,
+  //   @UploadedFile(
+  //     // La validación es opcional en la actualización
+  //     new ParseFilePipe({
+  //       validators: [
+  //         new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
+  //         new FileTypeValidator({ fileType: '.(png|jpeg|jpg|webp)' }),
+  //       ],
+  //       fileIsRequired: false, // <-- IMPORTANTE: el archivo no es obligatorio
+  //     }),
+  //   )
+  //   file?: Express.Multer.File,
+  // ) {
+  //   return this.seccionesWebService.update(id, updateSeccionWebDto, file);
+  // }
+
+  @Post(':id') // <--- 2. ESTE ES EL CAMBIO
+  @UseInterceptors(FileInterceptor('imagen'))
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateSeccionWebDto: UpdateSeccionWebDto,
     @UploadedFile(
-      // La validación es opcional en la actualización
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
           new FileTypeValidator({ fileType: '.(png|jpeg|jpg|webp)' }),
         ],
-        fileIsRequired: false, // <-- IMPORTANTE: el archivo no es obligatorio
+        fileIsRequired: false,
       }),
     )
     file?: Express.Multer.File,
