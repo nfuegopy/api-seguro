@@ -12,7 +12,7 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
-  FileTypeValidator,
+  //  FileTypeValidator,
   ParseIntPipe,
   HttpCode,
   HttpStatus,
@@ -34,7 +34,7 @@ export class SeccionesWebController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }), // 5 MB
-          new FileTypeValidator({ fileType: '.(png|jpeg|jpg|webp|svg)' }),
+          //
         ],
       }),
     )
@@ -71,7 +71,7 @@ export class SeccionesWebController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
-          new FileTypeValidator({ fileType: '.(png|jpeg|jpg|webp|svg)' }),
+          //
         ],
         fileIsRequired: false, // <-- IMPORTANTE: el archivo no es obligatorio
       }),
