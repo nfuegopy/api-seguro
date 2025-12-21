@@ -11,6 +11,10 @@ import {
 import { Aseguradora } from '../../../../principales/aseguradora/entities/aseguradora.entity';
 import { TipoSeguro } from '../../tipo-seguro/entities/tipo-seguro.entity';
 
+export enum TipoCalculo {
+  PRECIO_FIJO = 'PRECIO_FIJO',
+  DINAMICO_VEHICULAR = 'DINAMICO_VEHICULAR',
+}
 @Entity('productos_seguro')
 @Unique(['aseguradora', 'nombre_producto'])
 export class ProductoSeguro {
@@ -34,6 +38,14 @@ export class ProductoSeguro {
       'Permite que este producto sea seleccionado para la página pública.',
   })
   publicar_en_web: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: TipoCalculo,
+    default: TipoCalculo.PRECIO_FIJO,
+    name: 'tipo_calculo',
+  })
+  tipo_calculo: TipoCalculo;
 
   // --- Relación con Aseguradora ---
   @ManyToOne(() => Aseguradora, { nullable: false, eager: true })
