@@ -35,6 +35,15 @@ export class Usuario {
   @Column({ type: 'boolean', default: true })
   activo: boolean;
 
+  @Column({
+    type: 'boolean',
+    name: 'es_temporal',
+    default: false,
+    comment:
+      'Indica si el usuario fue creado automáticamente durante una cotización rápida',
+  })
+  es_temporal: boolean;
+
   @ManyToOne(() => Persona, { eager: true })
   @JoinColumn({ name: 'persona_id' })
   persona: Persona;
@@ -45,6 +54,9 @@ export class Usuario {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    // Solo hasheamos si no parece estar hasheado ya (por seguridad doble)
+    if (!this.password.startsWith('$2b$')) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 }
