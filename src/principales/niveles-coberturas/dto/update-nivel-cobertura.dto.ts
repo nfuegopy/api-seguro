@@ -2,4 +2,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateNivelCoberturaDto } from './create-nivel-cobertura.dto';
 
-export class UpdateNivelCoberturaDto extends PartialType(CreateNivelCoberturaDto) {}
+export class UpdateNivelCoberturaDto extends PartialType(
+  CreateNivelCoberturaDto,
+) {}

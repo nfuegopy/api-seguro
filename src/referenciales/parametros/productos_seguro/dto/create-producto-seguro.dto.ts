@@ -8,7 +8,9 @@ import {
   IsPositive,
   IsOptional,
   IsBoolean,
+  IsEnum,
 } from 'class-validator';
+import { TipoCalculo } from '../entities/producto_seguro.entity';
 
 export class CreateProductoSeguroDto {
   @IsString()
@@ -38,4 +40,9 @@ export class CreateProductoSeguroDto {
   @IsPositive()
   @IsNotEmpty()
   tipo_de_seguro_id: number;
+
+  @IsOptional()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  @IsEnum(TipoCalculo)
+  tipo_calculo?: TipoCalculo;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable prettier/prettier */
 
 import {
@@ -26,13 +27,16 @@ export class UsuariosService {
   ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto): Promise<Usuario> {
+    // MODIFICACIÓN CLAVE: Desestructuramos 'es_temporal' forzando el tipo 'any'
+    // para que acepte propiedades extras que no están en el DTO original.
     const {
       email,
       password,
       rol_id,
       persona_id,
       persona: personaData,
-    } = createUsuarioDto;
+      es_temporal, // <--- Capturamos la bandera aquí
+    } = createUsuarioDto as any;
 
     const emailExistente = await this.usuarioRepository.findOneBy({ email });
     if (emailExistente) {
@@ -67,6 +71,8 @@ export class UsuariosService {
       password,
       rol_id,
       persona_id: personaParaAsociar.id,
+      // Guardamos la bandera. Si no viene (creación normal), será false.
+      es_temporal: es_temporal || false,
     });
 
     return await this.usuarioRepository.save(nuevoUsuario);
@@ -99,19 +105,43 @@ export class UsuariosService {
     return { message: `Usuario con ID ${id} eliminado.` };
   }
 
-  //Service para utilizar con el Auth
-  // async findByEmail(email: string): Promise<Usuario | undefined> {
-  //   const user = await this.usuarioRepository.findOne({
-  //     where: { email },
-  //   });
-  //   return user ?? undefined; // Si user es null, devuelve undefined
-  // }
-
+  // Se mantiene con las relaciones necesarias para Auth y Cotizaciones
   async findByEmail(email: string): Promise<Usuario | undefined> {
     const user = await this.usuarioRepository.findOne({
       where: { email },
-      relations: ['persona', 'rol'], // <-- ESTA LÍNEA FALTA EN TU SERVIDOR
+      relations: ['persona', 'rol'],
     });
     return user ?? undefined;
+  }
+
+  // Metodo creado para cotizacion y creacion automatica de usuarios
+  async findOrCreateByEmail(
+    email: string,
+    datosPersona?: any,
+  ): Promise<Usuario> {
+    // 1. Buscamos si ya existe
+    const usuarioExistente = await this.usuarioRepository.findOne({
+      where: { email },
+      relations: ['persona', 'rol'],
+    });
+
+    if (usuarioExistente) {
+      return usuarioExistente;
+    }
+
+    // 2. Si no existe, creamos uno nuevo como Cliente
+    const ROL_CLIENTE_ID = 2;
+
+    // Preparamos el objeto con la bandera es_temporal: true
+    const nuevoUsuarioDto = {
+      email: email,
+      password: 'NuevoUsuario123', // Password temporal
+      rol_id: ROL_CLIENTE_ID,
+      persona: datosPersona,
+      es_temporal: true, // Importante: Marcamos como temporal
+    } as any;
+
+    // Reutilizamos el método create (que ahora ya sabe leer es_temporal)
+    return await this.create(nuevoUsuarioDto);
   }
 }

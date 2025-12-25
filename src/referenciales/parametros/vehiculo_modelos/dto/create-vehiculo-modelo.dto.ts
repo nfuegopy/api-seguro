@@ -1,6 +1,12 @@
 /* eslint-disable prettier/prettier */
 
-import { IsNotEmpty, IsString, MaxLength, IsInt, IsPositive } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  IsInt,
+  IsPositive,
+} from 'class-validator';
 
 export class CreateVehiculoModeloDto {
   @IsString()

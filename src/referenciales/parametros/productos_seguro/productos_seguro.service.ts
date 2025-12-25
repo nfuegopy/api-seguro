@@ -21,14 +21,22 @@ export class ProductosSeguroService {
   ) {}
 
   async create(createDto: CreateProductoSeguroDto): Promise<ProductoSeguro> {
-    const aseguradora = await this.aseguradoraRepository.findOne({ where: { id: createDto.aseguradora_id } });
+    const aseguradora = await this.aseguradoraRepository.findOne({
+      where: { id: createDto.aseguradora_id },
+    });
     if (!aseguradora) {
-      throw new NotFoundException(`La aseguradora con el ID ${createDto.aseguradora_id} no fue encontrada.`);
+      throw new NotFoundException(
+        `La aseguradora con el ID ${createDto.aseguradora_id} no fue encontrada.`,
+      );
     }
 
-    const tipoDeSeguro = await this.tipoDeSeguroRepository.findOne({ where: { id: createDto.tipo_de_seguro_id } });
+    const tipoDeSeguro = await this.tipoDeSeguroRepository.findOne({
+      where: { id: createDto.tipo_de_seguro_id },
+    });
     if (!tipoDeSeguro) {
-        throw new NotFoundException(`El tipo de seguro con el ID ${createDto.tipo_de_seguro_id} no fue encontrado.`);
+      throw new NotFoundException(
+        `El tipo de seguro con el ID ${createDto.tipo_de_seguro_id} no fue encontrado.`,
+      );
     }
 
     const nuevoProducto = this.productoRepository.create({
@@ -41,40 +49,64 @@ export class ProductosSeguroService {
   }
 
   async findAll(): Promise<ProductoSeguro[]> {
-    return await this.productoRepository.find({ relations: ['aseguradora', 'tipo_de_seguro'] });
+    return await this.productoRepository.find({
+      relations: ['aseguradora', 'tipo_de_seguro'],
+    });
   }
 
   async findOne(id: number): Promise<ProductoSeguro> {
-    const producto = await this.productoRepository.findOne({ where: { id }, relations: ['aseguradora', 'tipo_de_seguro'] });
+    const producto = await this.productoRepository.findOne({
+      where: { id },
+      relations: ['aseguradora', 'tipo_de_seguro'],
+    });
     if (!producto) {
-      throw new NotFoundException(`El producto con el ID ${id} no fue encontrado.`);
+      throw new NotFoundException(
+        `El producto con el ID ${id} no fue encontrado.`,
+      );
     }
     return producto;
   }
 
-  async update(id: number, updateDto: UpdateProductoSeguroDto): Promise<ProductoSeguro> {
+  async update(
+    id: number,
+    updateDto: UpdateProductoSeguroDto,
+  ): Promise<ProductoSeguro> {
     const producto = await this.findOne(id);
 
-    if (updateDto.aseguradora_id && updateDto.aseguradora_id !== producto.aseguradora.id) {
-        const nuevaAseguradora = await this.aseguradoraRepository.findOne({ where: { id: updateDto.aseguradora_id } });
-        if (!nuevaAseguradora) {
-            throw new NotFoundException(`La aseguradora con el ID ${updateDto.aseguradora_id} no fue encontrada.`);
-        }
-        producto.aseguradora = nuevaAseguradora;
+    if (
+      updateDto.aseguradora_id &&
+      updateDto.aseguradora_id !== producto.aseguradora.id
+    ) {
+      const nuevaAseguradora = await this.aseguradoraRepository.findOne({
+        where: { id: updateDto.aseguradora_id },
+      });
+      if (!nuevaAseguradora) {
+        throw new NotFoundException(
+          `La aseguradora con el ID ${updateDto.aseguradora_id} no fue encontrada.`,
+        );
+      }
+      producto.aseguradora = nuevaAseguradora;
     }
 
-    if (updateDto.tipo_de_seguro_id && updateDto.tipo_de_seguro_id !== producto.tipo_de_seguro.id) {
-        const nuevoTipo = await this.tipoDeSeguroRepository.findOne({ where: { id: updateDto.tipo_de_seguro_id } });
-        if (!nuevoTipo) {
-            throw new NotFoundException(`El tipo de seguro con el ID ${updateDto.tipo_de_seguro_id} no fue encontrado.`);
-        }
-        producto.tipo_de_seguro = nuevoTipo;
+    if (
+      updateDto.tipo_de_seguro_id &&
+      updateDto.tipo_de_seguro_id !== producto.tipo_de_seguro.id
+    ) {
+      const nuevoTipo = await this.tipoDeSeguroRepository.findOne({
+        where: { id: updateDto.tipo_de_seguro_id },
+      });
+      if (!nuevoTipo) {
+        throw new NotFoundException(
+          `El tipo de seguro con el ID ${updateDto.tipo_de_seguro_id} no fue encontrado.`,
+        );
+      }
+      producto.tipo_de_seguro = nuevoTipo;
     }
-    
+
     // Fusionar el resto de las propiedades
     const { aseguradora_id, tipo_de_seguro_id, ...rest } = updateDto;
     Object.assign(producto, rest);
-    
+
     return await this.productoRepository.save(producto);
   }
 

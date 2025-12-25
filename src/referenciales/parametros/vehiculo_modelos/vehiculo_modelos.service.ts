@@ -17,10 +17,16 @@ export class VehiculoModelosService {
     private readonly marcaRepository: Repository<VehiculoMarca>,
   ) {}
 
-  async create(createModeloDto: CreateVehiculoModeloDto): Promise<VehiculoModelo> {
-    const marca = await this.marcaRepository.findOne({ where: { id: createModeloDto.marca_id } });
+  async create(
+    createModeloDto: CreateVehiculoModeloDto,
+  ): Promise<VehiculoModelo> {
+    const marca = await this.marcaRepository.findOne({
+      where: { id: createModeloDto.marca_id },
+    });
     if (!marca) {
-      throw new NotFoundException(`La marca con el ID ${createModeloDto.marca_id} no fue encontrada.`);
+      throw new NotFoundException(
+        `La marca con el ID ${createModeloDto.marca_id} no fue encontrada.`,
+      );
     }
     const nuevoModelo = this.modeloRepository.create({
       nombre: createModeloDto.nombre,
@@ -34,27 +40,42 @@ export class VehiculoModelosService {
   }
 
   async findOne(id: number): Promise<VehiculoModelo> {
-    const modelo = await this.modeloRepository.findOne({ where: { id }, relations: ['marca'] });
+    const modelo = await this.modeloRepository.findOne({
+      where: { id },
+      relations: ['marca'],
+    });
     if (!modelo) {
-      throw new NotFoundException(`El modelo con el ID ${id} no fue encontrado.`);
+      throw new NotFoundException(
+        `El modelo con el ID ${id} no fue encontrado.`,
+      );
     }
     return modelo;
   }
 
-  async update(id: number, updateModeloDto: UpdateVehiculoModeloDto): Promise<VehiculoModelo> {
+  async update(
+    id: number,
+    updateModeloDto: UpdateVehiculoModeloDto,
+  ): Promise<VehiculoModelo> {
     const modelo = await this.findOne(id);
-    
-    if (updateModeloDto.marca_id && updateModeloDto.marca_id !== modelo.marca.id) {
-        const nuevaMarca = await this.marcaRepository.findOne({ where: { id: updateModeloDto.marca_id } });
-        if (!nuevaMarca) {
-            throw new NotFoundException(`La marca con el ID ${updateModeloDto.marca_id} no fue encontrada.`);
-        }
-        modelo.marca = nuevaMarca;
+
+    if (
+      updateModeloDto.marca_id &&
+      updateModeloDto.marca_id !== modelo.marca.id
+    ) {
+      const nuevaMarca = await this.marcaRepository.findOne({
+        where: { id: updateModeloDto.marca_id },
+      });
+      if (!nuevaMarca) {
+        throw new NotFoundException(
+          `La marca con el ID ${updateModeloDto.marca_id} no fue encontrada.`,
+        );
+      }
+      modelo.marca = nuevaMarca;
     }
 
     // Object.assign se puede usar para fusionar las demás propiedades
     Object.assign(modelo, { nombre: updateModeloDto.nombre });
-    
+
     return await this.modeloRepository.save(modelo);
   }
 

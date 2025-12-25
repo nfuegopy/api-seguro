@@ -20,7 +20,9 @@ describe('ProductosSeguroController', () => {
       ],
     }).compile();
 
-    controller = module.get<ProductosSeguroController>(ProductosSeguroController);
+    controller = module.get<ProductosSeguroController>(
+      ProductosSeguroController,
+    );
   });
 
   it('should be defined', () => {

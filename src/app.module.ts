@@ -36,6 +36,9 @@ import { SeccionProductoPublicadoModule } from './referenciales/web/seccion-prod
 import { CamposFormularioModule } from './referenciales/formularios/campos-formulario/campos-formulario.module';
 import { ProductoFormularioCamposModule } from './referenciales/formularios/producto-formulario-campos/producto-formulario-campos.module';
 
+//Nuevo import para cotizar
+import { CotizacionesModule } from './principales/cotizaciones/cotizaciones.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -83,6 +86,7 @@ import { ProductoFormularioCamposModule } from './referenciales/formularios/prod
     SeccionProductoPublicadoModule,
     CamposFormularioModule,
     ProductoFormularioCamposModule,
+    CotizacionesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

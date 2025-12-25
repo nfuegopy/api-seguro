@@ -1,5 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PolizasService } from './polizas.service';
 import { CreatePolizaDto } from './dto/create-poliza.dto';
 import { UpdatePolizaDto } from './dto/update-poliza.dto';

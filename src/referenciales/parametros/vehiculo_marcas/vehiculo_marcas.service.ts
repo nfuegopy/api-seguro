@@ -26,12 +26,17 @@ export class VehiculoMarcasService {
   async findOne(id: number): Promise<VehiculoMarca> {
     const marca = await this.marcaRepository.findOne({ where: { id } });
     if (!marca) {
-      throw new NotFoundException(`La marca con el ID ${id} no fue encontrada.`);
+      throw new NotFoundException(
+        `La marca con el ID ${id} no fue encontrada.`,
+      );
     }
     return marca;
   }
 
-  async update(id: number, updateMarcaDto: UpdateVehiculoMarcaDto): Promise<VehiculoMarca> {
+  async update(
+    id: number,
+    updateMarcaDto: UpdateVehiculoMarcaDto,
+  ): Promise<VehiculoMarca> {
     const marca = await this.findOne(id);
     this.marcaRepository.merge(marca, updateMarcaDto);
     return await this.marcaRepository.save(marca);

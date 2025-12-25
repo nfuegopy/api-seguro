@@ -16,7 +16,9 @@ import { UpdateVehiculoModeloDto } from './dto/update-vehiculo-modelo.dto';
 
 @Controller('vehiculo-modelos')
 export class VehiculoModelosController {
-  constructor(private readonly vehiculoModelosService: VehiculoModelosService) {}
+  constructor(
+    private readonly vehiculoModelosService: VehiculoModelosService,
+  ) {}
 
   @Post()
   create(@Body() createVehiculoModeloDto: CreateVehiculoModeloDto) {
