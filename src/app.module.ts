@@ -22,16 +22,18 @@ import { UsuariosModule } from './gestion/usuarios/usuarios.module';
 import { AuthModule } from './auth/auth.module';
 import { VehiculoMarcasModule } from './referenciales/parametros/vehiculo_marcas/vehiculo_marcas.module';
 import { VehiculoModelosModule } from './referenciales/parametros/vehiculo_modelos/vehiculo_modelos.module';
-import { ProductosSeguroModule } from './referenciales/parametros/productos_seguro/productos_seguro.module'; // De la rama b1
-import { GrupoMenuModule } from './referenciales/parametros/grupo-menu/grupo-menu.module'; // De la rama main
-import { MenuModule } from './referenciales/parametros/menu/menu.module'; // De la rama main
-import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.module'; // De la rama main
+import { ProductosSeguroModule } from './referenciales/parametros/productos_seguro/productos_seguro.module';
+import { GrupoMenuModule } from './referenciales/parametros/grupo-menu/grupo-menu.module';
+import { MenuModule } from './referenciales/parametros/menu/menu.module';
+import { MenuRolModule } from './referenciales/parametros/menu-rol/menu-rol.module';
 import { NivelesCoberturasModule } from './principales/niveles-coberturas/niveles-coberturas.module';
 import { BasesCondicionesModule } from './referenciales/parametros/bases-condiciones/bases-condiciones.module';
 import { PolizasModule } from './principales/polizas/polizas.module';
-import { SeccionesWebModule } from './referenciales/web/secciones-web/secciones-web.module'; // <-- 1. Importar el nuevo módulo
+import { SeccionesWebModule } from './referenciales/web/secciones-web/secciones-web.module';
 
 import { FirebaseModule } from './firebase/firebase.module';
+import { NotificationsModule } from './common/notifications/notifications.module';
+
 import { SeccionProductoPublicadoModule } from './referenciales/web/seccion-producto-publicado/seccion-producto-publicado.module';
 import { CamposFormularioModule } from './referenciales/formularios/campos-formulario/campos-formulario.module';
 import { ProductoFormularioCamposModule } from './referenciales/formularios/producto-formulario-campos/producto-formulario-campos.module';
@@ -87,6 +89,7 @@ import { CotizacionesModule } from './principales/cotizaciones/cotizaciones.modu
     CamposFormularioModule,
     ProductoFormularioCamposModule,
     CotizacionesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -8,6 +8,7 @@ import { ServiceAccount } from 'firebase-admin';
 @Injectable()
 export class FirebaseService implements OnModuleInit {
   private storageBucket: Bucket;
+  private firestore: admin.firestore.Firestore; // <--- NUEVO: Propiedad para Firestore
 
   constructor(private readonly configService: ConfigService) {}
 
@@ -40,6 +41,8 @@ export class FirebaseService implements OnModuleInit {
     }
 
     this.storageBucket = admin.storage().bucket();
+    this.firestore = admin.firestore(); // <--- NUEVO: Inicializamos Firestore
+
     console.log(
       'Firebase Admin SDK inicializado correctamente para el bucket:',
       bucketName,
@@ -66,7 +69,13 @@ export class FirebaseService implements OnModuleInit {
     }
   }
 
+  // --- RESTAURADO: Tu método original para imágenes ---
   getStorageBucket(): Bucket {
     return this.storageBucket;
+  }
+
+  // --- NUEVO: Método para correos/notificaciones ---
+  getFirestoreInstance(): admin.firestore.Firestore {
+    return this.firestore;
   }
 }
