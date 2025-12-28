@@ -7,7 +7,6 @@ import { VehiculoModelosService } from './vehiculo_modelos.service';
 import { VehiculoModelo } from './entities/vehiculo_modelo.entity';
 import { VehiculoMarca } from '../vehiculo_marcas/entities/vehiculo_marca.entity';
 
-
 @Module({
   imports: [TypeOrmModule.forFeature([VehiculoModelo, VehiculoMarca])],
   controllers: [VehiculoModelosController],

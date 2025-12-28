@@ -29,7 +29,9 @@ export class AseguradoraService {
   }
 
   async findOne(id: number) {
-    const aseguradora = await this.aseguradoraRepository.findOne({ where: { id } });
+    const aseguradora = await this.aseguradoraRepository.findOne({
+      where: { id },
+    });
     if (!aseguradora) {
       throw new NotFoundException(`Aseguradora con ID ${id} no encontrada`);
     }

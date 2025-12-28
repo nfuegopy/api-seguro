@@ -1,5 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 // Asumiendo que tienes una entidad ProductoSeguro, la importamos para la relación
 // import { ProductoSeguro } from '../../productos-seguro/entities/producto-seguro.entity';
 

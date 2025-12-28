@@ -9,7 +9,9 @@ describe('NivelesCoberturasController', () => {
       controllers: [NivelesCoberturasController],
     }).compile();
 
-    controller = module.get<NivelesCoberturasController>(NivelesCoberturasController);
+    controller = module.get<NivelesCoberturasController>(
+      NivelesCoberturasController,
+    );
   });
 
   it('should be defined', () => {

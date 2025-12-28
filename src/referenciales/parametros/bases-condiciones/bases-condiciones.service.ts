@@ -28,9 +28,13 @@ export class BasesCondicionesService {
   }
 
   async findOne(id: number) {
-    const condicion = await this.baseCondicionRepository.findOne({ where: { id } });
+    const condicion = await this.baseCondicionRepository.findOne({
+      where: { id },
+    });
     if (!condicion) {
-      throw new NotFoundException(`Base o condición con ID ${id} no encontrada`);
+      throw new NotFoundException(
+        `Base o condición con ID ${id} no encontrada`,
+      );
     }
     return condicion;
   }

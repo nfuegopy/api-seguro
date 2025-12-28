@@ -29,9 +29,13 @@ export class NivelesCoberturaService {
   }
 
   async findOne(id: number) {
-    const nivel = await this.nivelCoberturaRepository.findOne({ where: { id } });
+    const nivel = await this.nivelCoberturaRepository.findOne({
+      where: { id },
+    });
     if (!nivel) {
-      throw new NotFoundException(`Nivel de cobertura con ID ${id} no encontrado`);
+      throw new NotFoundException(
+        `Nivel de cobertura con ID ${id} no encontrado`,
+      );
     }
     return nivel;
   }

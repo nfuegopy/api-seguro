@@ -9,7 +9,9 @@ describe('BasesCondicionesController', () => {
       controllers: [BasesCondicionesController],
     }).compile();
 
-    controller = module.get<BasesCondicionesController>(BasesCondicionesController);
+    controller = module.get<BasesCondicionesController>(
+      BasesCondicionesController,
+    );
   });
 
   it('should be defined', () => {

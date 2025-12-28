@@ -37,6 +37,15 @@ export class Cotizacion {
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   precio_calculado: number;
 
+  @Column({
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+    name: 'cuota_mensual',
+    default: 0,
+  })
+  cuota_mensual: number;
+
   @CreateDateColumn({ name: 'fecha_solicitud' })
   fecha_solicitud: Date;
 

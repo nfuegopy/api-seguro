@@ -8,9 +8,10 @@ import { ProductoSeguro } from './entities/producto_seguro.entity';
 import { Aseguradora } from '../../../principales/aseguradora/entities/aseguradora.entity';
 import { TipoSeguro } from '../../parametros/tipo-seguro/entities/tipo-seguro.entity';
 
-
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductoSeguro, Aseguradora, TipoSeguro])],
+  imports: [
+    TypeOrmModule.forFeature([ProductoSeguro, Aseguradora, TipoSeguro]),
+  ],
   controllers: [ProductosSeguroController],
   providers: [ProductosSeguroService],
 })

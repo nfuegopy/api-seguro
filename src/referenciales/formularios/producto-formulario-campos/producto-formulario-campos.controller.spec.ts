@@ -9,7 +9,9 @@ describe('ProductoFormularioCamposController', () => {
       controllers: [ProductoFormularioCamposController],
     }).compile();
 
-    controller = module.get<ProductoFormularioCamposController>(ProductoFormularioCamposController);
+    controller = module.get<ProductoFormularioCamposController>(
+      ProductoFormularioCamposController,
+    );
   });
 
   it('should be defined', () => {

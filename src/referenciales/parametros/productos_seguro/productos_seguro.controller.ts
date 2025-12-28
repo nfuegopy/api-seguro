@@ -16,7 +16,9 @@ import { UpdateProductoSeguroDto } from './dto/update-producto-seguro.dto';
 
 @Controller('productos-seguro')
 export class ProductosSeguroController {
-  constructor(private readonly productosSeguroService: ProductosSeguroService) {}
+  constructor(
+    private readonly productosSeguroService: ProductosSeguroService,
+  ) {}
 
   @Post()
   create(@Body() createProductoSeguroDto: CreateProductoSeguroDto) {

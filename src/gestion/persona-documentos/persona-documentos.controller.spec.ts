@@ -11,7 +11,9 @@ describe('PersonaDocumentosController', () => {
       providers: [PersonaDocumentosService],
     }).compile();
 
-    controller = module.get<PersonaDocumentosController>(PersonaDocumentosController);
+    controller = module.get<PersonaDocumentosController>(
+      PersonaDocumentosController,
+    );
   });
 
   it('should be defined', () => {

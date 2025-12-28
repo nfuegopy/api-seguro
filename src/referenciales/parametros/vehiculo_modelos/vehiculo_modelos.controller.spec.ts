@@ -20,7 +20,9 @@ describe('VehiculoModelosController', () => {
       ],
     }).compile();
 
-    controller = module.get<VehiculoModelosController>(VehiculoModelosController);
+    controller = module.get<VehiculoModelosController>(
+      VehiculoModelosController,
+    );
   });
 
   it('should be defined', () => {
