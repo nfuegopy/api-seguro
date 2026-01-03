@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IEmailProvider } from './interfaces/email-provider.interface';
-import { FirebaseEmailProvider } from './providers/firebase-email.provider';
+//import { FirebaseEmailProvider } from './providers/firebase-email.provider';
 import { SmtpEmailProvider } from './providers/smtp-email.provider';
 
 @Injectable()
@@ -11,25 +11,23 @@ export class NotificationsService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly firebaseProvider: FirebaseEmailProvider,
+    //   private readonly firebaseProvider: FirebaseEmailProvider,
     private readonly smtpProvider: SmtpEmailProvider,
   ) {
     this.initializeProvider();
   }
 
   private initializeProvider() {
-    const providerEnv = this.configService.get<string>(
-      'NOTIFICATION_EMAIL_PROVIDER',
-      'firebase',
-    );
+    this.emailProvider = this.smtpProvider;
+    this.logger.log('🔧 Notificaciones forzadas a: SMTP (Nodemailer)');
 
-    if (providerEnv === 'smtp') {
-      this.emailProvider = this.smtpProvider;
-      this.logger.log('🔧 Notificaciones usando: SMTP (Nodemailer)');
-    } else {
-      this.emailProvider = this.firebaseProvider;
-      this.logger.log('🔥 Notificaciones usando: FIREBASE');
-    }
+    // if (providerEnv === 'smtp') {
+    //   this.emailProvider = this.smtpProvider;
+    //   this.logger.log('🔧 Notificaciones usando: SMTP (Nodemailer)');
+    // } else {
+    //   this.emailProvider = this.firebaseProvider;
+    //   this.logger.log('🔥 Notificaciones usando: FIREBASE');
+    // }
   }
 
   // Método actualizado con parámetro 'detalles'

@@ -49,7 +49,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
       },
     }),
   ],
-  providers: [NotificationsService, FirebaseEmailProvider, SmtpEmailProvider],
+  providers: [NotificationsService, SmtpEmailProvider],
   exports: [NotificationsService],
 })
 export class NotificationsModule {}
