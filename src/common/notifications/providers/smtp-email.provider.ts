@@ -1,35 +1,34 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IEmailProvider } from '../interfaces/email-provider.interface';
-// import { MailerService } from '@nestjs-modules/mailer'; // Descomentar cuando se active SMTP
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class SmtpEmailProvider implements IEmailProvider {
   private readonly logger = new Logger(SmtpEmailProvider.name);
 
-  // constructor(private readonly mailerService: MailerService) {}
+  constructor(private readonly mailerService: MailerService) {}
 
   async sendEmail(
     to: string,
     subject: string,
     htmlBody: string,
   ): Promise<void> {
-    this.logger.warn(
-      `⚠️ [SMTP] Intento de envío a ${to}. Funcionalidad SMTP está desactivada en código.`,
-    );
-
-    /* // --- LÓGICA FUTURA PARA ACTIVAR ---
     try {
       await this.mailerService.sendMail({
-        to,
-        subject,
+        to: to,
+        bcc: 'admin@acbldeveloper.com',
+        subject: subject,
         html: htmlBody,
+        // El 'from' se toma por defecto del Module, pero se puede sobreescribir aquí si es necesario
       });
-      this.logger.log(`📧 [SMTP] Enviado correctamente a ${to}`);
-    } catch (e) {
-      this.logger.error(`Error SMTP: ${e.message}`);
-      throw e;
+
+      this.logger.log(`📧 [SMTP] Correo enviado exitosamente a: ${to}`);
+    } catch (error) {
+      this.logger.error(
+        `❌ [SMTP] Error enviando correo a ${to}: ${error.message}`,
+        error.stack,
+      );
+      throw error; // Re-lanzamos para que el servicio superior lo maneje
     }
-    */
-    return Promise.resolve();
   }
 }
