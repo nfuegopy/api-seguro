@@ -2,7 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  Logger, // 1. Agregamos Logger
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
@@ -14,14 +14,12 @@ import {
   TipoCalculo,
 } from '../../referenciales/parametros/productos_seguro/entities/producto_seguro.entity';
 import { VehiculoMarca } from '../../referenciales/parametros/vehiculo_marcas/entities/vehiculo_marca.entity';
+import { VehiculoModelo } from '../../referenciales/parametros/vehiculo_modelos/entities/vehiculo_modelo.entity';
 import { NivelCobertura } from '../niveles-coberturas/entities/nivel-cobertura.entity';
-
-// 2. Importamos el servicio de notificaciones
 import { NotificationsService } from '../../common/notifications/notifications.service';
 
 @Injectable()
 export class CotizacionesService {
-  // 3. Inicializamos el Logger para registrar errores sin romper la app
   private readonly logger = new Logger(CotizacionesService.name);
 
   constructor(
@@ -31,11 +29,12 @@ export class CotizacionesService {
     private readonly productoRepo: Repository<ProductoSeguro>,
     @InjectRepository(VehiculoMarca)
     private readonly marcaRepo: Repository<VehiculoMarca>,
+    @InjectRepository(VehiculoModelo)
+    private readonly modeloRepo: Repository<VehiculoModelo>,
     @InjectRepository(NivelCobertura)
     private readonly nivelRepo: Repository<NivelCobertura>,
     private readonly usuariosService: UsuariosService,
     private readonly dataSource: DataSource,
-    // 4. Inyectamos el servicio de notificaciones
     private readonly notificationsService: NotificationsService,
   ) {}
 
@@ -46,6 +45,10 @@ export class CotizacionesService {
     });
     if (!producto)
       throw new NotFoundException('Producto de seguro no encontrado');
+
+    // --- LOG DE DIAGNÓSTICO ---
+    this.logger.debug(`🔍 Producto Encontrado: ${producto.nombre_producto}`);
+    this.logger.debug(`📊 Tipo Cálculo en BD: "${producto.tipo_calculo}"`);
 
     // 2. Obtener o Crear Usuario
     const datosPersona = {
@@ -59,41 +62,60 @@ export class CotizacionesService {
       datosPersona,
     );
 
-    // 3. CALCULAR PRECIO
-    let precioAnual = 0;
-    let cuotaMensual = 0;
+    // 3. RECUPERAR DATOS RELACIONADOS (Marca, Modelo, Nivel)
+    const marcaId = Number(dto.datos_vehiculo['marca_id']);
+    const modeloId = Number(dto.datos_vehiculo['modelo_id']);
 
-    const nivel = await this.nivelRepo.findOneBy({
-      id: dto.nivel_cobertura_id,
-    });
+    const [marca, modelo, nivel] = await Promise.all([
+      this.marcaRepo.findOneBy({ id: marcaId }),
+      this.modeloRepo.findOneBy({ id: modeloId }),
+      this.nivelRepo.findOneBy({ id: dto.nivel_cobertura_id }),
+    ]);
+
     if (!nivel) throw new NotFoundException('Nivel de cobertura no válido');
 
+    if (!modelo) {
+      this.logger.warn(
+        `⚠️ Modelo ID ${modeloId} no encontrado en la base de datos.`,
+      );
+    }
+
+    const nombreMarca = marca ? marca.nombre : 'Desconocida';
+    const nombreModelo = modelo ? modelo.nombre : 'Desconocido';
+
+    // 4. CALCULAR PRECIO
+    let precioAnual = 0;
+
     if (producto.tipo_calculo === TipoCalculo.DINAMICO_VEHICULAR) {
-      // --- LÓGICA DINÁMICA (VEHÍCULOS) ---
-      const valorFiscal = Number(dto.datos_vehiculo['valor_fiscal']);
+      let valorFiscalRaw = dto.datos_vehiculo['valor_fiscal'];
+      if (typeof valorFiscalRaw === 'string') {
+        valorFiscalRaw = valorFiscalRaw.replace(/\./g, '').replace(/,/g, '');
+      }
+      const valorFiscal = Number(valorFiscalRaw);
+
       if (!valorFiscal || valorFiscal <= 0) {
         throw new BadRequestException(
-          'El valor fiscal del vehículo es requerido para calcular el seguro.',
+          'El valor fiscal es inválido (0 o negativo).',
         );
       }
 
-      const marcaId = Number(dto.datos_vehiculo['marca_id']);
-      const marca = await this.marcaRepo.findOneBy({ id: marcaId });
       const factorRiesgoMarca = marca ? Number(marca.factor_riesgo) : 1.0;
-
       const tasaPorcentaje = Number(nivel.prima_anual_base);
 
-      precioAnual = Number(
-        (valorFiscal * (tasaPorcentaje / 100) * factorRiesgoMarca).toFixed(2),
+      this.logger.log(
+        `🧮 Calculando: Valor(${valorFiscal}) * Tasa(${tasaPorcentaje}%) * Factor(${factorRiesgoMarca})`,
       );
-      cuotaMensual = precioAnual / 12;
+
+      precioAnual = valorFiscal * (tasaPorcentaje / 100) * factorRiesgoMarca;
     } else {
-      // --- LÓGICA PRECIO FIJO ---
+      this.logger.warn(`⚠️ Entrando a lógica de PRECIO FIJO.`);
       precioAnual = Number(nivel.prima_anual_base);
-      cuotaMensual = precioAnual / 12;
     }
 
-    // 4. Guardar Cotización
+    precioAnual = Math.round(precioAnual);
+    const cuotaMensual = Math.round(precioAnual / 12);
+
+    // 5. Guardar Cotización
     const nuevaCotizacion = this.cotizacionRepo.create({
       usuario_id: usuario.id,
       producto_seguro_id: producto.id,
@@ -103,29 +125,40 @@ export class CotizacionesService {
       estado: EstadoCotizacion.ENVIADA,
     });
 
-    // Guardamos primero para asegurar el dato en BD
     const cotizacionGuardada = await this.cotizacionRepo.save(nuevaCotizacion);
 
-    // 5. ENVÍO DE NOTIFICACIÓN (Bloque Seguro)
+    // 6. ENVÍO DE CORREO CON MÁS DATOS
     try {
-      const precioFormateado = precioAnual.toLocaleString('es-PY');
-      const nombreCliente = dto.nombre_usuario || 'Cliente';
+      const formateador = new Intl.NumberFormat('es-PY', {
+        style: 'decimal',
+        maximumFractionDigits: 0,
+      });
+      const precioFormateado = formateador.format(precioAnual) + ' Gs.';
+
+      const detallesCorreo = {
+        marca: nombreMarca,
+        modelo: nombreModelo,
+        anio: dto.datos_vehiculo['anio'],
+        matricula: dto.datos_vehiculo['matricula'],
+        uso: dto.datos_vehiculo['uso'] || 'Particular',
+        valorFiscal:
+          formateador.format(Number(dto.datos_vehiculo['valor_fiscal'] || 0)) +
+          ' Gs.',
+        // CORREGIDO AQUÍ:
+        cobertura: nivel.nombre_nivel,
+      };
+
+      const nombreCliente = `${dto.nombre_usuario} ${dto.apellido_usuario}`;
 
       await this.notificationsService.sendCotizacionEmail(
         dto.email_usuario,
         nombreCliente,
-        producto.nombre_producto, // <--- CORRECCIÓN CRÍTICA: nombre_producto
+        producto.nombre_producto,
         precioFormateado,
-      );
-      this.logger.log(
-        `📧 Notificación enviada exitosamente a ${dto.email_usuario}`,
+        detallesCorreo,
       );
     } catch (error) {
-      // Si falla el correo, solo lo registramos en consola, NO lanzamos error
-      // para que el usuario reciba su cotización (json) correctamente.
-      this.logger.error(
-        `⚠️ Error enviando correo de cotización: ${error.message}`,
-      );
+      this.logger.error(`❌ Error enviando correo: ${error.message}`);
     }
 
     return cotizacionGuardada;
