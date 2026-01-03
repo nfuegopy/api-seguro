@@ -39,84 +39,86 @@ export class CotizacionesService {
   ) {}
 
   async crear(dto: CreateCotizacionDto) {
-    // 1. Validar Producto
+    // 1. Validaciones
     const producto = await this.productoRepo.findOneBy({
       id: dto.producto_seguro_id,
     });
     if (!producto) throw new NotFoundException('Producto no encontrado');
 
-    // 2. Gestionar Usuario (Igual que antes)
-    const datosPersona = {
-      nombre: dto.nombre_usuario || 'Cliente',
-      apellido: dto.apellido_usuario || 'Web',
-      documentos: [{ tipo_documento_id: 1, numero: 'TEMP-' + Date.now() }],
-    };
     const usuario = await this.usuariosService.findOrCreateByEmail(
       dto.email_usuario,
-      datosPersona,
+      {
+        nombre: dto.nombre_usuario || 'Cliente',
+        apellido: dto.apellido_usuario || '',
+        documentos: [{ tipo_documento_id: 1, numero: 'TEMP-' + Date.now() }],
+      },
     );
 
-    // 3. RECUPERAR NIVEL (Necesario para cualquier cálculo)
     const nivel = await this.nivelRepo.findOneBy({
       id: dto.nivel_cobertura_id,
     });
-    if (!nivel) throw new NotFoundException('Nivel de cobertura inválido');
+    if (!nivel) throw new NotFoundException('Nivel no válido');
 
-    // --- LÓGICA DINÁMICA ---
+    // 2. RECUPERAR DATOS (Sin mezclar Chasis y Matrícula)
+    const datosRaw = dto.datos_vehiculo;
+
+    // IDs de Marca y Modelo
+    const marcaId = Number(datosRaw['marca_id']);
+    const modeloId = Number(datosRaw['modelo_id']);
+    const marca = marcaId
+      ? await this.marcaRepo.findOneBy({ id: marcaId })
+      : null;
+    const modelo = modeloId
+      ? await this.modeloRepo.findOneBy({ id: modeloId })
+      : null;
+
+    // Valor Fiscal y Año
+    const valorFiscalRaw = datosRaw['valor_fiscal'] || datosRaw['Precio'] || 0;
+    const valorFiscal = Number(
+      String(valorFiscalRaw).replace(/\./g, '').replace(/,/g, ''),
+    );
+    const anio = datosRaw['anio'] || datosRaw['anio_fabricacion'] || 'N/A';
+
+    // DATOS IDENTIFICATORIOS (Separados)
+    // Si no vienen, se quedan como null o string vacío, el notificador pondrá el guión '-'
+    const matricula = datosRaw['matricula'];
+    const chasis = datosRaw['chasis'];
+
+    // 3. CÁLCULO DE PRECIO
     let precioAnual = 0;
-    let detallesCorreo: any = { cobertura: nivel.nombre_nivel }; // Objeto base para el email
+    const tasa = Number(nivel.prima_anual_base);
+    const factorRiesgo =
+      producto.tipo_calculo === 'DINAMICO_VEHICULAR' && marca
+        ? Number(marca.factor_riesgo)
+        : 1.0;
 
-    // Usamos el TIPO DE CÁLCULO para saber qué datos buscar dentro de 'datos_vehiculo'
-    switch (producto.tipo_calculo) {
-      case TipoCalculo.DINAMICO_VEHICULAR:
-        // Aquí extraemos datos específicos de AUTO
-        const marcaId = Number(dto.datos_vehiculo['marca_id']);
-        const modeloId = Number(dto.datos_vehiculo['modelo_id']);
-
-        // Buscamos en BD solo si es necesario
-        const marca = await this.marcaRepo.findOneBy({ id: marcaId });
-        const factorRiesgo = marca ? Number(marca.factor_riesgo) : 1.0;
-
-        // Limpieza del valor fiscal (quita puntos y comas)
-        let valorFiscalRaw =
-          dto.datos_vehiculo['valor_fiscal'] || dto.datos_vehiculo['Precio']; // Soporta ambas keys
-        if (typeof valorFiscalRaw === 'string') {
-          valorFiscalRaw = valorFiscalRaw.replace(/\./g, '').replace(/,/g, '');
-        }
-        const valorFiscal = Number(valorFiscalRaw);
-
-        // Fórmula
-        const tasa = Number(nivel.prima_anual_base);
-        precioAnual = valorFiscal * (tasa / 100) * factorRiesgo;
-
-        // Datos para el correo de Auto
-        detallesCorreo.marca = marca ? marca.nombre : 'Generica';
-        detallesCorreo.anio =
-          dto.datos_vehiculo['anio_fabricacion'] || dto.datos_vehiculo['anio'];
-        detallesCorreo.matricula =
-          dto.datos_vehiculo['matricula'] || dto.datos_vehiculo['chasis']; // Usamos chasis si no hay matricula
-        detallesCorreo.valor_asegurado = new Intl.NumberFormat('es-PY').format(
-          valorFiscal,
-        );
-        break;
-
-      case 'PRECIO_FIJO': // O el enum que uses
-      default:
-        // Lógica simple: El precio viene directo de la base del nivel
-        precioAnual = Number(nivel.prima_anual_base);
-        detallesCorreo.tipo = 'Plan de Precio Fijo';
-        break;
+    if (producto.tipo_calculo === 'DINAMICO_VEHICULAR') {
+      precioAnual = valorFiscal * (tasa / 100) * factorRiesgo;
+    } else {
+      precioAnual = tasa;
     }
 
-    // 4. Finalizar Cálculo
     precioAnual = Math.round(precioAnual);
     const cuotaMensual = Math.round(precioAnual / 12);
 
-    // 5. Guardar
+    // 4. PREPARAR OBJETO PARA EL CORREO
+    const fmt = new Intl.NumberFormat('es-PY');
+
+    // Aquí definimos EXACTAMENTE qué filas queremos ver en el correo
+    const detallesCorreo = {
+      Vehículo: `${marca ? marca.nombre : 'Genérico'} ${modelo ? modelo.nombre : ''}`,
+      Año: anio,
+      Matrícula: matricula, // Se enviará como clave separada
+      Chasis: chasis, // Se enviará como clave separada
+      'Valor Asegurado': fmt.format(valorFiscal) + ' Gs.',
+      Cobertura: nivel.nombre_nivel,
+    };
+
+    // 5. GUARDAR Y ENVIAR
     const nuevaCotizacion = this.cotizacionRepo.create({
       usuario_id: usuario.id,
       producto_seguro_id: producto.id,
-      datos_vehiculo: dto.datos_vehiculo, // Guardamos el JSON crudo para referencia futura
+      datos_vehiculo: dto.datos_vehiculo,
       precio_calculado: precioAnual,
       cuota_mensual: cuotaMensual,
       estado: EstadoCotizacion.ENVIADA,
@@ -124,19 +126,17 @@ export class CotizacionesService {
 
     await this.cotizacionRepo.save(nuevaCotizacion);
 
-    // 6. Enviar Correo (Usando los detalles dinámicos armados arriba)
-    const precioFormateado =
-      new Intl.NumberFormat('es-PY').format(precioAnual) + ' Gs.';
-
-    // NOTA: Asegúrate que tu notificationsService acepte un objeto genérico en 'detallesCorreo'
-    // o ajusta tu template HTML para iterar sobre las claves.
-    await this.notificationsService.sendCotizacionEmail(
-      dto.email_usuario,
-      `${dto.nombre_usuario} ${dto.apellido_usuario}`,
-      producto.nombre_producto,
-      precioFormateado,
-      detallesCorreo,
-    );
+    try {
+      await this.notificationsService.sendCotizacionEmail(
+        dto.email_usuario,
+        `${dto.nombre_usuario} ${dto.apellido_usuario}`,
+        producto.nombre_producto,
+        fmt.format(precioAnual) + ' Gs.',
+        detallesCorreo, // Pasamos el objeto con las claves separadas
+      );
+    } catch (error) {
+      this.logger.error(`Error mail: ${error.message}`);
+    }
 
     return nuevaCotizacion;
   }
